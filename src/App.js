@@ -6,7 +6,7 @@ function App() {
                     <img width={40} height={40} src="/img/logo.png" alt="" />
                     <div>
                         <h3 className="text-uppercase">React sneakers</h3>
-                        <p className="opacity-5">Магазин лучших кроссовок</p>
+                        <p className="opacity-5тз">Магазин лучших кроссовок</p>
                     </div>
                 </div>
                 <ul className="d-flex">
