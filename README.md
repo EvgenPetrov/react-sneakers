@@ -1,8 +1,10 @@
-Stack:
+## Stack
 
-ReactJS + хуки
-React Router
-Axios
-SCSS
-React Context
-React Skeleton
+| Стек           |
+| -------------- |
+| ReactJS + хуки |
+| React Router   |
+| Axios          |
+| SCSS           |
+| React Context  |
+| React Skeleton |
