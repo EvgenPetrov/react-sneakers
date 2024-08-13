@@ -12,6 +12,7 @@ function App() {
     const [favorites, setFavorites] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [cartOpened, setCartOpened] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         axios.get("https://66ac845af009b9d5c73257b9.mockapi.io/items").then((res) => {
@@ -23,10 +24,11 @@ function App() {
     }, []);
 
     const onAddToCart = (obj) => {
-        axios.post("https://66ac845af009b9d5c73257b9.mockapi.io/cart", obj);
-        const itemExist = cartItems.some((item) => item.id === obj.id);
-        if (!itemExist) {
-            setCartItems((prev) => [...cartItems, obj]);
+        if (cartItems.some((item) => item.id === obj.id)) {
+            setCartItems((prev) => prev.filter((item) => item.id !== obj.id));
+        } else {
+            axios.post("https://66ac845af009b9d5c73257b9.mockapi.io/cart", obj);
+            setCartItems((prev) => [...prev, obj]);
         }
     };
 
@@ -57,7 +59,13 @@ function App() {
     return (
         <div className="wrapper clear">
             <div className={`overlay ${cartOpened ? "overlayVisible" : ""}`}>
-                {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveFromCart} />}
+                {cartOpened && (
+                    <Drawer
+                        items={cartItems}
+                        onClose={() => setCartOpened(false)}
+                        onRemove={onRemoveFromCart}
+                    />
+                )}
             </div>
 
             <Header onClickCart={() => setCartOpened(true)} />
