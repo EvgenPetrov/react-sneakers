@@ -1,17 +1,54 @@
+import { useState } from "react";
 import styles from "./Drawer.module.scss";
 
-const Drawer = ({ onClose, items = [], onRemove }) => {
+import useCart from "../hooks/useCart";
+import Info from "../Info";
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function Drawer({ onClose, onRemove, items = [], opened }) {
+    const { cartItems, setCartItems, totalPrice } = useCart();
+    const [orderId, setOrderId] = useState(null);
+    const [isOrderComplete, setIsOrderComplete] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onClickOrder = async () => {
+        try {
+            setIsLoading(true);
+
+            // Лог для проверки наличия элементов в корзине
+            console.log("Cart Items:", cartItems);
+
+            // Симуляция задержки
+            await delay(1000);
+
+            // Фейковый ID заказа и успешное завершение
+            setOrderId(Date.now());
+            setIsOrderComplete(true);
+
+            // Очистка корзины
+            if (cartItems.length > 0) {
+                setCartItems([]);
+            } else {
+                console.warn("Cart is already empty.");
+            }
+
+            // Лог для проверки завершения заказа
+            console.log("Order Complete:", isOrderComplete);
+        } catch (error) {
+            alert("Ошибка при оформлении заказа :(");
+            console.error("Order Error:", error);
+        }
+
+        setIsLoading(false);
+    };
+
     return (
-        <div className={styles.overlay}>
+        <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
             <div className={styles.drawer}>
-                <h2 className="d-flex justify-between mb-30 ">
-                    Корзина
-                    <img
-                        onClick={onClose}
-                        className="removeBtn cu-p"
-                        src="/img/btn-remove.svg"
-                        alt="Close"
-                    />
+                <h2 className="d-flex justify-between mb-30">
+                    Корзина{" "}
+                    <img onClick={onClose} className="cu-p" src="img/btn-remove.svg" alt="Close" />
                 </h2>
 
                 {items.length > 0 ? (
@@ -38,39 +75,39 @@ const Drawer = ({ onClose, items = [], onRemove }) => {
                         </div>
                         <div className="cartTotalBlock">
                             <ul>
-                                <li className="d-flex">
+                                <li>
                                     <span>Итого:</span>
                                     <div></div>
-                                    <b>21 498 руб.</b>
+                                    <b>{totalPrice} руб. </b>
                                 </li>
-                                <li className="d-flex">
-                                    <span>Налог 5%:</span>
+                                <li>
+                                    <span>Налог 18%:</span>
                                     <div></div>
-                                    <b>1074 руб.</b>
+                                    <b>{(totalPrice / 100) * 18} руб. </b>
                                 </li>
                             </ul>
-                            <button className="greenButton">
-                                Оформить
-                                <img src="/img/arrow.svg" alt="Arrow" />
+                            <button
+                                disabled={isLoading}
+                                onClick={onClickOrder}
+                                className="greenButton">
+                                Оформить заказ <img src="img/arrow.svg" alt="Arrow" />
                             </button>
                         </div>
                     </div>
                 ) : (
-                    <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-                        <img className="mb-20" src="/img/empty-cart.jpg" alt="Empty" />
-                        <h2>Корзина пустая</h2>
-                        <p className="opacity-6">
-                            Добавьте хотя-бы одну пару кроссовок, чтобы сделать заказ.
-                        </p>
-                        <button onClick={onClose} className="greenButton">
-                            <img src="img/arrow.svg" alt="Arrow" />
-                            Вернуться назад
-                        </button>
-                    </div>
+                    <Info
+                        title={isOrderComplete ? "Заказ оформлен!" : "Корзина пустая"}
+                        description={
+                            isOrderComplete
+                                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
+                                : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
+                        }
+                        image={isOrderComplete ? "img/complete-order.jpg" : "img/empty-cart.jpg"}
+                    />
                 )}
             </div>
         </div>
     );
-};
+}
 
 export default Drawer;

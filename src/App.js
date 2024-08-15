@@ -92,7 +92,6 @@ function App() {
                 favorites,
                 isItemAdded,
                 onAddToFavorite,
-
                 onAddToCart,
                 setCartOpened,
                 setCartItems,
