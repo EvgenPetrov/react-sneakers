@@ -15,7 +15,7 @@ const Home = ({
         );
         return (isLoading ? [...Array(9)] : filtredItems).map((item, index) => (
             <Card
-                key={item.id || index}
+                key={index}
                 onFavorite={(obj) => onAddToFavorite(obj)}
                 onPlus={(obj) => onAddToCart(obj)}
                 loading={isLoading}
@@ -38,11 +38,7 @@ const Home = ({
                             alt="Clear"
                         />
                     )}
-                    <input
-                        onChange={onSearchChangeInput}
-                        value={searchValue}
-                        placeholder="Поиск..."
-                    />
+                    <input onChange={onSearchChangeInput} value={searchValue} placeholder="Поиск..." />
                 </div>
             </div>
 
